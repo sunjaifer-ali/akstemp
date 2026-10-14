@@ -8,7 +8,9 @@ Next.js App Router, React, TypeScript, Neon PostgreSQL, Drizzle ORM, Zod, bcrypt
 ## Included
 - Responsive management dashboard
 - Login API using hashed passwords and expiring HTTP-only sessions
-- One-time owner seed script; no default admin/admin credentials
+- Individual staff accounts and admin-only user management (add/reactivate/deactivate)
+- Password change page; newly created users receive temporary password `Akshaya@1`
+- Script to create the six requested initial users, without overwriting existing accounts
 - Customer create/list page and API; GST is optional
 - Initial PostgreSQL schema for users, customers, services, transactions, balances, staff profiles and audit log
 - Explicit accounting transaction types/payment destinations and reconciliation helper
@@ -24,7 +26,7 @@ Counter transaction entry, credit/advance settlement, expense/salary workflows, 
 4. Create a NEW development database in Neon. Put its connection string in local `.env.local` as `DATABASE_URL`. Never paste secrets into chat or commit them.
 5. Generate a random `AUTH_SECRET` with at least 32 characters.
 6. Run `npm run db:generate`; inspect the generated migration. Run `npm run db:migrate` only with the new development database configured.
-7. Set `OWNER_USERNAME`, `OWNER_PASSWORD` (14+ characters) and `OWNER_DISPLAY_NAME` in your terminal environment, then run `npm run seed:owner` once.
+7. Run `npm run seed:staff` once to create Jaifer Ali (Admin) and Aneesa, Ajitha, Sheena, Rubeena and Haseena (Staff), all with temporary password `Akshaya@1`. Existing usernames are skipped and not overwritten. Run this only after the database migration succeeds.
 8. Run `npm run dev`.
 
 ## Commands
@@ -35,3 +37,12 @@ Centre funds = centre cash + E-district wallet + CSC wallet + centre bank. Perso
 
 ## Safety
 No production DB URL, credentials, migration or deployment is included. Use a separate Neon database and separate Vercel project. Do not deploy or change production without explicit owner approval.
+
+
+## Simple local setup
+1. Copy `.env.example` to `.env.local`.
+2. Fill in the NEW development Neon `DATABASE_URL`, a fresh random `AUTH_SECRET`, and owner fields. Use a strong unique owner password of at least 14 characters. Never commit `.env.local`.
+3. Run `npm install`, then `npm run db:generate`, `npm run db:migrate`, and `npm run seed:owner`.
+4. Run `npm run dev`. Login username is prefilled as `owner`; the password is the one you set.
+
+The Drizzle config and seed scripts load `.env.local` automatically. Initial usernames: `jaifer`, `aneesa`, `ajitha`, `sheena`, `rubeena`, `haseena`. All newly created accounts use temporary password `Akshaya@1`; each person should sign in and change it immediately at Account → Change password. Admin can add accounts and deactivate/reactivate access from Staff & users. Deactivation preserves old records. Use only the development database, not the live Akshaya database. This is still an MVP foundation, not a finished production accounting system.
